@@ -1,55 +1,45 @@
 #include <stdarg.h>
 #include <stdio.h>
+#include "main.h"
+/**
+ * _printf - Custom printf function
+ * @format: different format to meet
+ *
+ * Return: Number of char printed
+ */
 
 int _printf(const char *format, ...)
 {
-    va_list args;
-    int count = 0;
-    va_start(args, format);
-    while (*format != '\0')
-    {
-        if (*format == '%')
-        {
-        format++; /* Move past '%' */
-            if (*format == 'c')
-            {
-                /* Print a character */
-                putchar(va_arg(args, int));
-                count++;
-            }
-            else if (*format == 's')
-            {
-                /* Print a string */
-                char *str = va_arg(args, char *);
-                while (*str != '\0')
-                {
-                    putchar(*str);
-                    str++;
-                    count++;
-                }
-            }
-            else if (*format == '%')
-            {
-                /* Print a '%' character */
-                putchar('%');
-                count++;
-            }
-            else
-            {
-                /* Invalid format specifier, ignore and continue */
-                putchar('%'); /* Print the '%' that was skipped */
-                putchar(*format); /* Print the character after '%'*/
-                count += 2;
-            }
-        }
-        else
-        {
-            /* Normal character, print it */
-            putchar(*format);
-            count++;
-        }
-        format++;
-    }
-    va_end(args);
-    return count;
+	va_list ap;
+	va_start(ap, format);/* Init the list to start working list of arguments */
+	while (*format != '\0')/* Loop to iterate each character of the format */
+	{
+		if (*format == '%')/* Check if the current character is '%' */
+		{
+			++format;
+			if (*format == 'c')/* If the format specifier is 'c' */
+			{
+				print_char(ap);/* Retrieve the character argument */
+			}
+			else if (*format == 's')/* If the format specifier is 's' */
+			{
+				print_string(ap); /* Retrieve the string argument */
+			}
+			else if (*format == '%')/* If the format specifier is '%' */
+			{
+				print_percent();/* Print the percentage using putchar */
+			}
+			else
+			{
+				putchar(*format);/* Print character without format specifier */
+			}
+		}
+		else
+		{
+			putchar(*format);/* Print character without format specifier */
+		}
+		++format;/*move to the next character in the format string */
+	}
+	va_end(ap);/* end the processing of optional arguments */
+	return (0);
 }
